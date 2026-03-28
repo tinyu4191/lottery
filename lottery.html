@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>抽獎</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden}
@@ -44,7 +47,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   text-align:center;
   /* subtle inner vignette so content sits naturally inside circle */
   border-radius:50%;
-  padding:clamp(16px,4%,48px);
+  padding:clamp(16px,4%,0px);
 }
 
 /* ══ BOTTOM BUTTON AREA ══
@@ -84,7 +87,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   transition:all .22s;
   /* text */
   color:#f5c518;
-  font-family:'Ma Shan Zheng',cursive;
+  font-family:'Yuji Syuku',cursive;
   font-size:clamp(19px,2.5vw,34px);
   letter-spacing:5px;
   text-shadow:0 0 12px rgba(245,197,24,.9), 0 1px 3px rgba(0,0,0,.6);
@@ -138,14 +141,14 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 /* ══ TEXT COLORS for center stage (on cream/gold circle) ══ */
 /* Labels */
 .stage-label{
-  font-size:clamp(11px,1.05vw,15px);
+  font-size:clamp(11px,3vw,100px);
   color:rgba(100,30,0,.65);
   letter-spacing:4px;
   text-shadow:none;
 }
 /* Prize name */
 .stage-prize-name{
-  font-family:'Ma Shan Zheng',cursive;
+  font-family:'Yuji Syuku',cursive;
   font-size:clamp(26px,4.2vw,60px);
   color:#7a1500;
   line-height:1.1;
@@ -198,7 +201,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 }
 .rs-winners{display:flex;flex-wrap:wrap;gap:clamp(7px,1.3vw,13px);justify-content:center}
 .rs-winner{
-  font-family:'Ma Shan Zheng',cursive;
+  font-family:'Yuji Syuku',cursive;
   font-size:clamp(24px,3.8vw,54px);
   color:#7a1500;
   padding:clamp(4px,.7vh,8px) clamp(10px,1.8vw,22px);
@@ -242,7 +245,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 .rs-btn{
   padding:clamp(6px,.85vh,10px) clamp(14px,2.2vw,26px);
   border-radius:28px;
-  font-family:'Ma Shan Zheng',cursive;
+  font-family:'Yuji Syuku',cursive;
   font-size:clamp(12px,1.2vw,16px);
   letter-spacing:2px;cursor:pointer;transition:all .2s;
 }
