@@ -424,6 +424,28 @@ function updUI(){
   }
 }
 
+function showShowcase(idx){
+  setScreen('showcase');
+  if(!prizes.length||idx>=prizes.length){
+    document.getElementById('sc-name').textContent=!prizes.length?'請先在後台設定獎項':'🎉 所有獎項已抽完！';
+    document.getElementById('sc-media').innerHTML='';
+    document.getElementById('drawBtn').disabled=true;
+    document.getElementById('drawHint').textContent='';
+    return;
+  }
+  const p=prizes[idx];
+  document.getElementById('sc-name').textContent=p.name;
+  const media=document.getElementById('sc-media');
+  if(p.photoURL){
+    media.innerHTML=`<div class="sc-photo-wrap"><img class="sc-photo" src="${p.photoURL}" alt="獎品照片"></div>`;
+  } else {
+    media.innerHTML=`<div class="lanterns">${lsv('#c0152a','#f5c518')}${lsv('#7a0000','#ffe066')}${lsv('#c0152a','#f5c518')}</div>`;
+  }
+  document.getElementById('drawBtn').textContent='🎯 開始抽獎';
+  document.getElementById('drawBtn').disabled=false;
+  document.getElementById('drawHint').textContent='';
+}
+
 function onDrawBtnClick(){
   // doDraw();
   if(screen==='showcase'){setScreen('draw');updUI();}
@@ -534,12 +556,13 @@ async function confirmAndNext(){
   const hk=Date.now().toString(36);
   const u={};
   u['history/'+hk]={prize:prize.name,winners:aw,timestamp:Date.now()};
-  const rem=prize.remaining||0;
-  u['state/currentPrizeIdx']=rem<=0?idx+1:idx;
+  const latestRemaining=prizes[idx]?.remaining??0;
+  u['state/currentPrizeIdx']=latestRemaining<=0?idx+1:idx;
   u['state/phase']='idle';
   await db.ref().update(u);
   currentWinners=[];pendingRemovals=[];
-  setScreen('showcase');
+  lstate.currentPrizeIdx=u['state/currentPrizeIdx'];
+  showShowcase(lstate.currentPrizeIdx);
 }
 
 function renderHistBar(){
