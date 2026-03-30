@@ -664,16 +664,20 @@ async function confirmAndNext(){
 
 let marqueeX = window.innerWidth;
 let marqueeRAF = null;
-let marqueeSpeed = 1.4; // px per frame，調整這個控制速度
+let marqueeSpeed = 1.4;
+let marqueeRunId = 0; // 每次啟動給一個唯一 ID，舊 loop 發現 ID 不對就自動停止
 
 function startMarquee(){
-  if(marqueeRAF) return;
+  marqueeRunId++; // 讓所有舊的 loop 失效
+  const myId = marqueeRunId;
+  if(marqueeRAF){ cancelAnimationFrame(marqueeRAF); marqueeRAF=null; }
   function step(){
+    if(myId !== marqueeRunId) return; // 我已經是舊的了，停止
     const track = document.getElementById('marquee-track');
-    if(!track){marqueeRAF=null;return;}
+    if(!track){ marqueeRAF=null; return; }
     marqueeX -= marqueeSpeed;
     const halfW = track.scrollWidth / 2;
-    if(marqueeX <= -halfW) marqueeX += halfW;
+    if(halfW > 0 && marqueeX <= -halfW) marqueeX += halfW;
     track.style.transform = `translateX(${marqueeX}px)`;
     marqueeRAF = requestAnimationFrame(step);
   }
@@ -698,22 +702,22 @@ function renderHistBar(){
     return;
   }
 
-  // 有新紀錄才更新內容，且不重建 DOM
+ // 有新紀錄才更新內容
   const currentCount = parseInt(el.dataset.count || '0');
   if(history.length <= currentCount) return;
 
-  // 追加新紀錄（重建內容但保留位置）
+  // 停掉動畫
+  if(marqueeRAF){ cancelAnimationFrame(marqueeRAF); marqueeRAF=null; }
+
+  // 保留當前位移，重建內容
   const items = history.map(h =>
     `<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`
   ).join('');
-  // 更新兩份內容但不動 transform
-  const currentTransform = track.style.transform;
   el.innerHTML = `<div id="marquee-track" class="marquee-track">${items}${items}</div>`;
-  document.getElementById('marquee-track').style.transform = currentTransform;
+  // 繼續從目前位置跑，不重置 marqueeX
+  document.getElementById('marquee-track').style.transform = `translateX(${marqueeX}px)`;
   el.dataset.count = history.length;
-  // 確保動畫還在跑
-  marqueeRAF = null;
-  startMarquee();
+  startMarquee(); // 重新啟動（舊的已確實停止）
 }
 
 /* ── BALL ── */
