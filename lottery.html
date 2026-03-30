@@ -313,8 +313,8 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   background:rgba(30,5,0,.95);
   border:1.5px solid rgba(200,140,0,.4);
   border-radius:14px;
-  width:clamp(300px,60vw,680px);
-  max-height:75vh;
+  width:clamp(300px,80vw,960px);   /* 原本 60vw,680px */
+  max-height:85vh;           
   display:flex;flex-direction:column;
   overflow:hidden;
   box-shadow:0 20px 60px rgba(0,0,0,.6);
@@ -348,12 +348,19 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 .pool-modal-content::-webkit-scrollbar-thumb{background:rgba(200,140,0,.3);border-radius:2px}
 
 /* pool grid */
-.pm-pool-grid{display:flex;flex-wrap:wrap;gap:6px}
+.pm-pool-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+  gap:8px;
+}
 .pm-chip{
-  padding:4px 12px;border-radius:20px;font-size:13px;
+  padding:8px 12px;
+  border-radius:20px;
+  font-size:28px;
   background:rgba(255,245,200,.08);
   border:1px solid rgba(200,140,0,.25);
   color:rgba(255,230,160,.75);
+  text-align:center;
 }
 .pm-chip.drawn{
   opacity:.3;text-decoration:line-through;
@@ -367,8 +374,8 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
 }
 .pm-hist-item:last-child{border-bottom:none}
-.pm-hist-prize{color:rgba(245,197,24,.85);font-weight:700;font-size:13px;min-width:70px;flex-shrink:0}
-.pm-hist-names{color:rgba(255,230,160,.6);font-size:13px}
+.pm-hist-prize{color:rgba(245,197,24,.85);font-weight:700;font-size:28px;min-width:70px;flex-shrink:0}
+.pm-hist-names{color:rgba(255,230,160,.6);font-size:28px}
 .pm-empty{color:rgba(255,230,160,.25);font-size:13px;text-align:center;padding:24px 0}
 .pm-stats{font-size:11px;color:rgba(255,230,160,.35);margin-bottom:12px;letter-spacing:1px}
 </style>
@@ -781,7 +788,7 @@ function renderModalHist(){
 init();
 </script>
 <!-- ══ POOL MODAL ══ -->
-<button class="pool-modal-btn" onclick="toggleModal()">📋 名單</button>
+<button class="pool-modal-btn" onclick="toggleModal()">📋</button>
 <div class="pool-modal-backdrop" id="poolModal" style="display:none" onclick="toggleModal()">
   <div class="pool-modal" onclick="event.stopPropagation()">
     <button class="pool-modal-close" onclick="toggleModal()">✕</button>
