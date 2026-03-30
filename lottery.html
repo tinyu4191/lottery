@@ -274,14 +274,12 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   overflow:hidden;
   display:flex;
   align-items:center;
-  position:relative; /* 加這行 */
 }
 .marquee-track{
   display:flex;
   gap:clamp(24px,5vw,60px);
   white-space:nowrap;
   flex-shrink:0;
-  position:absolute;
   left:0;top:0;height:100%;
   align-items:center;
 }
@@ -666,16 +664,16 @@ async function confirmAndNext(){
 
 let marqueeX = window.innerWidth;
 let marqueeRAF = null;
-let marqueeSpeed = 1.2; // px per frame，調整這個控制速度
+let marqueeSpeed = 1.4; // px per frame，調整這個控制速度
 
 function startMarquee(){
-  if(marqueeRAF) return; // 已經在跑就不重複啟動
+  if(marqueeRAF) return;
   function step(){
     const track = document.getElementById('marquee-track');
     if(!track){marqueeRAF=null;return;}
     marqueeX -= marqueeSpeed;
-    const trackW = track.offsetWidth / 2; // 因為內容複製兩份，一份的寬度
-    if(marqueeX <= -trackW) marqueeX = 0; // 無縫循環
+    const halfW = track.scrollWidth / 2;
+    if(marqueeX <= -halfW) marqueeX += halfW;
     track.style.transform = `translateX(${marqueeX}px)`;
     marqueeRAF = requestAnimationFrame(step);
   }
