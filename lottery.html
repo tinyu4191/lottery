@@ -274,17 +274,16 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   overflow:hidden;
   display:flex;
   align-items:center;
+  position:relative; /* 加這行 */
 }
 .marquee-track{
   display:flex;
   gap:clamp(24px,5vw,60px);
   white-space:nowrap;
-  animation:marquee 100s linear infinite;
   flex-shrink:0;
-}
-@keyframes marquee{
-  0%{transform:translateX(100vw)}
-  100%{transform:translateX(-50%)}
+  position:absolute;
+  left:0;top:0;height:100%;
+  align-items:center;
 }
 .hb-item{font-size:clamp(10px,.88vw,12px);color:rgba(255,230,160,.65);flex-shrink:0}
 .hb-item span{color:rgba(245,197,24,.9);font-weight:700;margin-right:3px}
@@ -665,14 +664,58 @@ async function confirmAndNext(){
   showShowcase(lstate.currentPrizeIdx);
 }
 
+let marqueeX = window.innerWidth;
+let marqueeRAF = null;
+let marqueeSpeed = 1.5; // px per frame，調整這個控制速度
+
+function startMarquee(){
+  if(marqueeRAF) return; // 已經在跑就不重複啟動
+  function step(){
+    const track = document.getElementById('marquee-track');
+    if(!track){marqueeRAF=null;return;}
+    marqueeX -= marqueeSpeed;
+    const trackW = track.offsetWidth / 2; // 因為內容複製兩份，一份的寬度
+    if(marqueeX <= -trackW) marqueeX = 0; // 無縫循環
+    track.style.transform = `translateX(${marqueeX}px)`;
+    marqueeRAF = requestAnimationFrame(step);
+  }
+  marqueeRAF = requestAnimationFrame(step);
+}
+
 function renderHistBar(){
-  const el=document.getElementById('histBar');
-  if(!history.length){el.innerHTML='';return;}
-  const items=history.map(h=>`<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`).join('');
-  const newHash=items.length+'|'+history.map(h=>h.prize+h.winners.join('')).join('|');
-  if(el.dataset.hash===newHash)return; // 內容沒變就不重繪
-  el.dataset.hash=newHash;
-  el.innerHTML=`<div class="marquee-track">${items}${items}</div>`;
+  const el = document.getElementById('histBar');
+  if(!history.length){ el.innerHTML=''; return; }
+
+  let track = document.getElementById('marquee-track');
+
+  if(!track){
+    // 第一次：建立 track，初始化位置從右側進入
+    marqueeX = window.innerWidth;
+    const items = history.map(h =>
+      `<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`
+    ).join('');
+    el.innerHTML = `<div id="marquee-track" class="marquee-track">${items}${items}</div>`;
+    startMarquee();
+    el.dataset.count = history.length;
+    return;
+  }
+
+  // 有新紀錄才更新內容，且不重建 DOM
+  const currentCount = parseInt(el.dataset.count || '0');
+  if(history.length <= currentCount) return;
+
+  // 追加新紀錄（重建內容但保留位置）
+  const items = history.map(h =>
+    `<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`
+  ).join('');
+  // 更新兩份內容但不動 transform
+  const currentTransform = track.style.transform;
+  el.innerHTML = `<div id="marquee-track" class="marquee-track">${items}${items}</div>`;
+  document.getElementById('marquee-track').style.transform = currentTransform;
+  el.dataset.count = history.length;
+  // 確保動畫還在跑
+  marqueeRAF = null;
+  startMarquee();
 }
 
 /* ── BALL ── */
