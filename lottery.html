@@ -480,7 +480,7 @@ function init(){
 
 function sizeBall(){
   const vw=window.innerWidth,vh=window.innerHeight;
-  ballSize=Math.min(Math.floor(vh*.38),Math.floor(vw*.32),320);
+  ballSize=Math.min(Math.floor(vh*.50),Math.floor(vw*.48),320);
   const c=document.getElementById('ballCanvas');
   c.width=ballSize;c.height=ballSize;
   c.style.width=ballSize+'px';c.style.height=ballSize+'px';
