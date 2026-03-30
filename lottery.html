@@ -270,12 +270,23 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   position:fixed;bottom:0;left:0;right:0;z-index:5;
   background:rgba(80,0,0,.72);
   border-top:1px solid rgba(200,140,0,.4);
-  padding:5px clamp(14px,7vw,100px);
-  display:flex;gap:clamp(10px,2.5vw,36px);
-  flex-wrap:wrap;justify-content:center;align-items:center;
-  min-height:28px;
+  height:32px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
 }
-.hb-item{font-size:clamp(10px,.88vw,12px);color:rgba(255,230,160,.65)}
+.marquee-track{
+  display:flex;
+  gap:clamp(24px,5vw,60px);
+  white-space:nowrap;
+  animation:marquee 20s linear infinite;
+  flex-shrink:0;
+}
+@keyframes marquee{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+.hb-item{font-size:clamp(10px,.88vw,12px);color:rgba(255,230,160,.65);flex-shrink:0}
 .hb-item span{color:rgba(245,197,24,.9);font-weight:700;margin-right:3px}
 </style>
 </head>
@@ -567,7 +578,9 @@ async function confirmAndNext(){
 function renderHistBar(){
   const el=document.getElementById('histBar');
   if(!history.length){el.innerHTML='';return;}
-  el.innerHTML=history.slice(0,5).map(h=>`<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`).join('');
+  // 產生一份內容，複製一次讓跑馬燈無縫循環
+  const items=history.map(h=>`<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`).join('');
+  el.innerHTML=`<div class="marquee-track">${items}${items}</div>`;
 }
 
 /* ── BALL ── */
