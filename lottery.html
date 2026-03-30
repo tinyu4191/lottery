@@ -288,6 +288,89 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 }
 .hb-item{font-size:clamp(10px,.88vw,12px);color:rgba(255,230,160,.65);flex-shrink:0}
 .hb-item span{color:rgba(245,197,24,.9);font-weight:700;margin-right:3px}
+
+/* ══ POOL MODAL BUTTON ══ */
+.pool-modal-btn{
+  position:fixed;top:16px;right:16px;z-index:20;
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(80,0,0,.75);
+  border:1.5px solid rgba(200,140,0,.5);
+  color:rgba(255,230,160,.9);font-size:18px;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.pool-modal-btn:hover{background:rgba(120,0,0,.9);border-color:rgba(245,197,24,.8)}
+
+/* ══ POOL MODAL ══ */
+.pool-modal-backdrop{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  animation:fi .2s ease;
+}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.pool-modal{
+  background:rgba(30,5,0,.95);
+  border:1.5px solid rgba(200,140,0,.4);
+  border-radius:14px;
+  width:clamp(300px,60vw,680px);
+  max-height:75vh;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  animation:mp .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes mp{from{transform:scale(.88) translateY(16px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.pool-modal-close{
+  position:absolute;top:12px;right:14px;
+  background:none;border:none;color:rgba(255,230,160,.5);
+  font-size:18px;cursor:pointer;transition:color .15s;
+}
+.pool-modal-close:hover{color:rgba(255,230,160,.9)}
+.pool-modal-tabs{
+  display:flex;border-bottom:1px solid rgba(200,140,0,.25);
+  flex-shrink:0;padding:0 16px;gap:4px;padding-top:12px;
+}
+.pmt{
+  padding:8px 20px;background:transparent;
+  border:none;border-bottom:2px solid transparent;
+  color:rgba(255,230,160,.45);font-family:'Noto Serif TC',serif;
+  font-size:13px;cursor:pointer;transition:all .15s;
+  margin-bottom:-1px;letter-spacing:1px;
+}
+.pmt.active{color:rgba(245,197,24,.9);border-bottom-color:rgba(245,197,24,.8)}
+.pmt:hover:not(.active){color:rgba(255,230,160,.7)}
+.pool-modal-content{
+  flex:1;overflow-y:auto;padding:16px 20px;
+}
+.pool-modal-content::-webkit-scrollbar{width:4px}
+.pool-modal-content::-webkit-scrollbar-track{background:transparent}
+.pool-modal-content::-webkit-scrollbar-thumb{background:rgba(200,140,0,.3);border-radius:2px}
+
+/* pool grid */
+.pm-pool-grid{display:flex;flex-wrap:wrap;gap:6px}
+.pm-chip{
+  padding:4px 12px;border-radius:20px;font-size:13px;
+  background:rgba(255,245,200,.08);
+  border:1px solid rgba(200,140,0,.25);
+  color:rgba(255,230,160,.75);
+}
+.pm-chip.drawn{
+  opacity:.3;text-decoration:line-through;
+  background:transparent;border-color:rgba(150,150,150,.2);
+  color:rgba(200,200,200,.4);
+}
+/* history list */
+.pm-hist-item{
+  padding:10px 0;
+  border-bottom:1px solid rgba(200,140,0,.15);
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+}
+.pm-hist-item:last-child{border-bottom:none}
+.pm-hist-prize{color:rgba(245,197,24,.85);font-weight:700;font-size:13px;min-width:70px;flex-shrink:0}
+.pm-hist-names{color:rgba(255,230,160,.6);font-size:13px}
+.pm-empty{color:rgba(255,230,160,.25);font-size:13px;text-align:center;padding:24px 0}
+.pm-stats{font-size:11px;color:rgba(255,230,160,.35);margin-bottom:12px;letter-spacing:1px}
 </style>
 </head>
 <body>
@@ -578,8 +661,10 @@ async function confirmAndNext(){
 function renderHistBar(){
   const el=document.getElementById('histBar');
   if(!history.length){el.innerHTML='';return;}
-  // 產生一份內容，複製一次讓跑馬燈無縫循環
   const items=history.map(h=>`<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`).join('');
+  const newHash=items.length+'|'+history.map(h=>h.prize+h.winners.join('')).join('|');
+  if(el.dataset.hash===newHash)return; // 內容沒變就不重繪
+  el.dataset.hash=newHash;
   el.innerHTML=`<div class="marquee-track">${items}${items}</div>`;
 }
 
@@ -660,7 +745,53 @@ function animFW(ctx,c){
   fwAnim=requestAnimationFrame(()=>animFW(ctx,c));
 }
 
+function toggleModal(){
+  const m=document.getElementById('poolModal');
+  const isOpen=m.style.display==='flex';
+  if(!isOpen){renderModalPool();renderModalHist();}
+  m.style.display=isOpen?'none':'flex';
+}
+
+function switchTab(tab){
+  document.getElementById('modal-pool-content').style.display=tab==='pool'?'block':'none';
+  document.getElementById('modal-hist-content').style.display=tab==='hist'?'block':'none';
+  document.getElementById('tab-pool').className='pmt'+(tab==='pool'?' active':'');
+  document.getElementById('tab-hist').className='pmt'+(tab==='hist'?' active':'');
+}
+
+function renderModalPool(){
+  const el=document.getElementById('modal-pool-content');
+  const arr=Object.values(members);
+  if(!arr.length){el.innerHTML='<div class="pm-empty">名單為空</div>';return;}
+  const inPool=arr.filter(m=>m.inPool).length;
+  el.innerHTML=`<div class="pm-stats">共 ${arr.length} 人　抽獎池剩餘 ${inPool} 人　已抽出 ${arr.length-inPool} 人</div>
+    <div class="pm-pool-grid">${arr.map(m=>`<div class="pm-chip ${m.inPool?'':'drawn'}">${m.name}</div>`).join('')}</div>`;
+}
+
+function renderModalHist(){
+  const el=document.getElementById('modal-hist-content');
+  if(!history.length){el.innerHTML='<div class="pm-empty">尚未有得獎紀錄</div>';return;}
+  el.innerHTML=history.map(h=>`
+    <div class="pm-hist-item">
+      <span class="pm-hist-prize">🏆 ${h.prize}</span>
+      <span class="pm-hist-names">${h.winners.join('、')}</span>
+    </div>`).join('');
+}
+
 init();
 </script>
+<!-- ══ POOL MODAL ══ -->
+<button class="pool-modal-btn" onclick="toggleModal()">📋 名單</button>
+<div class="pool-modal-backdrop" id="poolModal" style="display:none" onclick="toggleModal()">
+  <div class="pool-modal" onclick="event.stopPropagation()">
+    <button class="pool-modal-close" onclick="toggleModal()">✕</button>
+    <div class="pool-modal-tabs">
+      <button class="pmt active" id="tab-pool" onclick="switchTab('pool')">🎱 抽獎池</button>
+      <button class="pmt" id="tab-hist" onclick="switchTab('hist')">🏆 得獎紀錄</button>
+    </div>
+    <div id="modal-pool-content" class="pool-modal-content"></div>
+    <div id="modal-hist-content" class="pool-modal-content" style="display:none"></div>
+  </div>
+</div>
 </body>
 </html>
