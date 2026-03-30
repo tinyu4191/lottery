@@ -460,7 +460,7 @@ function init(){
   });
   db.ref('history').on('value',s=>{
     const r=s.val();
-    history=r?Object.values(r).sort((a,b)=>b.timestamp-a.timestamp):[];
+    history=r?Object.values(r).sort((a,b)=>a.timestamp-b.timestamp):[];
     renderHistBar();
   });
   db.ref('state').on('value',s=>{lstate=s.val()||{currentPrizeIdx:0,phase:'idle'};updUI();});
