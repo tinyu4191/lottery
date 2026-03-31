@@ -495,22 +495,55 @@ function setScreen(s){
   document.getElementById('drawContent').style.display=s==='draw'?'flex':'none';
   document.getElementById('resultContent').style.display=s==='result'?'flex':'none';
   document.getElementById('bottomBtnArea').style.display=s==='result'?'none':'flex';
+  // 離開 showcase 時停止垂直跑馬燈
+  if(s !== 'showcase') stopWinnersMarquee();
+}
+
+let winnersMarqueeRAF = null;
+let winnersMarqueeY = 0;
+let winnersMarqueeRunId = 0;
+
+function startWinnersMarquee(){
+  winnersMarqueeRunId++;
+  const myId = winnersMarqueeRunId;
+  if(winnersMarqueeRAF){ cancelAnimationFrame(winnersMarqueeRAF); winnersMarqueeRAF=null; }
+  winnersMarqueeY = 0; // 從頂部開始往上滾
+  function step(){
+    if(myId !== winnersMarqueeRunId) return;
+    const track = document.getElementById('winners-marquee-track');
+    if(!track){ winnersMarqueeRAF=null; return; }
+    winnersMarqueeY -= 0.6; // 速度，負數 = 往上滾，調整這個數字控制快慢
+    const halfH = track.scrollHeight / 2;
+    if(halfH > 0 && winnersMarqueeY <= -halfH) winnersMarqueeY += halfH;
+    track.style.transform = `translateY(${winnersMarqueeY}px)`;
+    winnersMarqueeRAF = requestAnimationFrame(step);
+  }
+  winnersMarqueeRAF = requestAnimationFrame(step);
+}
+
+function stopWinnersMarquee(){
+  winnersMarqueeRunId++;
+  if(winnersMarqueeRAF){ cancelAnimationFrame(winnersMarqueeRAF); winnersMarqueeRAF=null; }
 }
 
 function renderAllWinners(){
   if(!history.length) return '<div style="color:rgba(100,30,0,.5);font-size:14px;letter-spacing:2px;">✦ 所有獎項已抽完 ✦</div>';
   const rows = history.map(h=>`
-    <div style="margin-bottom:10px;text-align:center;">
-      <div style="font-size:28px;color:rgba(100,30,0,.55);letter-spacing:2px;margin-bottom:3px;">🏆 ${h.prize}</div>
-      <div style="font-family:'Yuji Syuku',cursive;font-size:28px;color:#7a1500;line-height:1.4;">
+    <div style="margin-bottom:18px;text-align:center;">
+      <div style="font-size:28px;color:rgba(100,30,0,.55);letter-spacing:2px;margin-bottom:4px;">🏆 ${h.prize}</div>
+      <div style="font-family:'Yuji Syuku',cursive;font-size:28px;color:#7a1500;line-height:1.5;">
         ${h.winners.join('　')}
       </div>
     </div>`).join('');
   return `
-    <div style="text-align:center;margin-bottom:12px;">
+    <div style="text-align:center;margin-bottom:14px;flex-shrink:0;">
       <div style="font-family:'Yuji Syuku',cursive;font-size:clamp(18px,2.5vw,32px);color:#7a1500;letter-spacing:4px;">✦ 所有獎項已抽完 ✦</div>
     </div>
-    <div class="all-winners-scroll" style="max-height:55vh;overflow-y:auto;padding:0 8px;">${rows}</div>`;
+    <div class="all-winners-scroll" style="flex:1;overflow:hidden;position:relative;">
+      <div id="winners-marquee-track" style="position:absolute;width:100%;will-change:transform;">
+        ${rows}${rows}
+      </div>
+    </div>`;
 }
 
 function updUI(){
@@ -528,6 +561,7 @@ function updUI(){
       } else {
         document.getElementById('sc-name').textContent='';
         document.getElementById('sc-media').innerHTML=renderAllWinners();
+        setTimeout(()=>startWinnersMarquee(), 200);
       }
       btn.disabled=true;hint.textContent='';
       return;
@@ -564,8 +598,9 @@ function showShowcase(idx){
       document.getElementById('sc-name').textContent='請先在後台設定獎項';
       document.getElementById('sc-media').innerHTML='';
     } else {
-      document.getElementById('sc-name').textContent='';
-      document.getElementById('sc-media').innerHTML=renderAllWinners();
+          document.getElementById('sc-name').textContent='';
+          document.getElementById('sc-media').innerHTML=renderAllWinners();
+          setTimeout(()=>startWinnersMarquee(), 200);
     }
     document.getElementById('drawBtn').disabled=true;
     document.getElementById('drawHint').textContent='';
