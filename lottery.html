@@ -412,7 +412,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   <div id="showcaseContent">
     <div class="stage-label">✦ 即將抽出 ✦</div>
     <div class="stage-prize-name" id="sc-name">載入中...</div>
-    <div id="sc-media"></div>
+    <div id="sc-media" style="flex: 1 0 0;"></div>
   </div>
 
   <!-- DRAW -->
@@ -547,7 +547,7 @@ function renderAllWinners(){
     <div style="text-align:center;margin-bottom:14px;flex-shrink:0;">
       <div style="font-family:'Yuji Syuku',cursive;font-size:clamp(18px,2.5vw,32px);color:#7a1500;letter-spacing:4px;">✦ 所有獎項已抽完 ✦</div>
     </div>
-      <div class="all-winners-scroll" style="height:60%;overflow:hidden;position:relative;">
+      <div class="all-winners-scroll" style="height:90%;overflow:hidden;position:relative;">
       <div id="winners-marquee-track" style="position:absolute;width:100%;will-change:transform;">
         ${rows}${rows}
       </div>
