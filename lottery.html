@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>抽獎</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden}
@@ -34,9 +31,9 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 .center-stage{
   position:fixed;
   left:50%;
-  top:47.5%;
+  top:49%;
   transform:translate(-50%,-52%);
-  width:clamp(280px,42vw,800px);
+  width:clamp(280px,42vw,600px);
   aspect-ratio:1/1;
   z-index:10;
   display:flex;
@@ -47,8 +44,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   text-align:center;
   /* subtle inner vignette so content sits naturally inside circle */
   border-radius:50%;
-  padding:clamp(16px,4%,0px);
-  overflow:hidden; /* 防止內容溢出圓形 */
+  padding:clamp(16px,4%,48px);
 }
 
 /* ══ BOTTOM BUTTON AREA ══
@@ -88,7 +84,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   transition:all .22s;
   /* text */
   color:#f5c518;
-  font-family:'Yuji Syuku',cursive;
+  font-family:'Ma Shan Zheng',cursive;
   font-size:clamp(19px,2.5vw,34px);
   letter-spacing:5px;
   text-shadow:0 0 12px rgba(245,197,24,.9), 0 1px 3px rgba(0,0,0,.6);
@@ -142,14 +138,14 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 /* ══ TEXT COLORS for center stage (on cream/gold circle) ══ */
 /* Labels */
 .stage-label{
-  font-size:clamp(11px,3vw,100px);
+  font-size:clamp(11px,1.05vw,15px);
   color:rgba(100,30,0,.65);
   letter-spacing:4px;
   text-shadow:none;
 }
 /* Prize name */
 .stage-prize-name{
-  font-family:'Yuji Syuku',cursive;
+  font-family:'Ma Shan Zheng',cursive;
   font-size:clamp(26px,4.2vw,60px);
   color:#7a1500;
   line-height:1.1;
@@ -163,18 +159,11 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 }
 
 /* ══ SHOWCASE ══ */
-#showcaseContent{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:clamp(6px,1.2vh,14px);
-  width:100%;
-  height:100%; /* 加這行，讓內容可以撐滿圓形區域 */
-}
+#showcaseContent{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,14px);width:100%}
 
 .sc-photo-wrap{
   position:relative;
-  max-width:clamp(120px,25vw,700px);
+  max-width:clamp(120px,20vw,260px);
   max-height:clamp(90px,18vh,220px);
 }
 .sc-photo{
@@ -209,7 +198,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 }
 .rs-winners{display:flex;flex-wrap:wrap;gap:clamp(7px,1.3vw,13px);justify-content:center}
 .rs-winner{
-  font-family:'Yuji Syuku',cursive;
+  font-family:'Ma Shan Zheng',cursive;
   font-size:clamp(24px,3.8vw,54px);
   color:#7a1500;
   padding:clamp(4px,.7vh,8px) clamp(10px,1.8vw,22px);
@@ -253,7 +242,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 .rs-btn{
   padding:clamp(6px,.85vh,10px) clamp(14px,2.2vw,26px);
   border-radius:28px;
-  font-family:'Yuji Syuku',cursive;
+  font-family:'Ma Shan Zheng',cursive;
   font-size:clamp(12px,1.2vw,16px);
   letter-spacing:2px;cursor:pointer;transition:all .2s;
 }
@@ -278,125 +267,13 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   position:fixed;bottom:0;left:0;right:0;z-index:5;
   background:rgba(80,0,0,.72);
   border-top:1px solid rgba(200,140,0,.4);
-  height:32px;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
+  padding:5px clamp(14px,7vw,100px);
+  display:flex;gap:clamp(10px,2.5vw,36px);
+  flex-wrap:wrap;justify-content:center;align-items:center;
+  min-height:28px;
 }
-.marquee-track{
-  display:flex;
-  gap:clamp(24px,5vw,60px);
-  white-space:nowrap;
-  flex-shrink:0;
-  left:0;top:0;height:100%;
-  align-items:center;
-}
-.hb-item{font-size:clamp(10px,.88vw,18px);color:rgba(255,230,160,.65);flex-shrink:0}
+.hb-item{font-size:clamp(10px,.88vw,12px);color:rgba(255,230,160,.65)}
 .hb-item span{color:rgba(245,197,24,.9);font-weight:700;margin-right:3px}
-
-/* ══ POOL MODAL BUTTON ══ */
-.pool-modal-btn{
-  position:fixed;top:16px;right:16px;z-index:20;
-  width:42px;height:42px;border-radius:50%;
-  background:rgba(80,0,0,.75);
-  border:1.5px solid rgba(200,140,0,.5);
-  color:rgba(255,230,160,.9);font-size:18px;
-  cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;justify-content:center;
-}
-.pool-modal-btn:hover{background:rgba(120,0,0,.9);border-color:rgba(245,197,24,.8)}
-
-/* ══ POOL MODAL ══ */
-.pool-modal-backdrop{
-  position:fixed;inset:0;z-index:100;
-  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
-  display:flex;align-items:center;justify-content:center;
-  animation:fi .2s ease;
-}
-@keyframes fi{from{opacity:0}to{opacity:1}}
-.pool-modal{
-  background:rgba(30,5,0,.95);
-  border:1.5px solid rgba(200,140,0,.4);
-  border-radius:14px;
-  width:clamp(300px,80vw,960px);   /* 原本 60vw,680px */
-  max-height:85vh;           
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,.6);
-  animation:mp .3s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes mp{from{transform:scale(.88) translateY(16px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-.pool-modal-close{
-  position:absolute;top:12px;right:14px;
-  background:rgba(255,245,200,.12);
-  border:1px solid rgba(200,140,0,.35);
-  border-radius:6px;
-  color:rgba(255,230,160,.8);
-  font-size:16px;
-  padding:4px 12px;
-  cursor:pointer;
-  transition:all .15s;
-  letter-spacing:1px;
-}
-.pool-modal-close:hover{
-  background:rgba(180,0,0,.5);
-  border-color:rgba(245,197,24,.6);
-  color:rgba(255,230,160,1);
-}
-.pool-modal-tabs{
-  display:flex;border-bottom:1px solid rgba(200,140,0,.25);
-  flex-shrink:0;padding:0 16px;gap:4px;padding-top:12px;
-}
-.pmt{
-  padding:8px 20px;background:transparent;
-  border:none;border-bottom:2px solid transparent;
-  color:rgba(255,230,160,.45);font-family:'Noto Serif TC',serif;
-  font-size:13px;cursor:pointer;transition:all .15s;
-  margin-bottom:-1px;letter-spacing:1px;
-}
-.pmt.active{color:rgba(245,197,24,.9);border-bottom-color:rgba(245,197,24,.8)}
-.pmt:hover:not(.active){color:rgba(255,230,160,.7)}
-.pool-modal-content{
-  flex:1;overflow-y:auto;padding:16px 20px;
-}
-.pool-modal-content::-webkit-scrollbar{width:4px}
-.pool-modal-content::-webkit-scrollbar-track{background:transparent}
-.pool-modal-content::-webkit-scrollbar-thumb{background:rgba(200,140,0,.3);border-radius:2px}
-
-/* pool grid */
-.pm-pool-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
-  gap:8px;
-}
-.pm-chip{
-  padding:8px 12px;
-  border-radius:20px;
-  font-size:28px;
-  background:rgba(255,245,200,.08);
-  border:1px solid rgba(200,140,0,.25);
-  color:rgba(255,230,160,.75);
-  text-align:center;
-}
-.pm-chip.drawn{
-  opacity:.3;text-decoration:line-through;
-  background:transparent;border-color:rgba(150,150,150,.2);
-  color:rgba(200,200,200,.4);
-}
-/* history list */
-.pm-hist-item{
-  padding:10px 0;
-  border-bottom:1px solid rgba(200,140,0,.15);
-  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
-}
-.pm-hist-item:last-child{border-bottom:none}
-.pm-hist-prize{color:rgba(245,197,24,.85);font-weight:700;font-size:28px;min-width:70px;flex-shrink:0}
-.pm-hist-names{color:rgba(255,230,160,.6);font-size:28px}
-.pm-empty{color:rgba(255,230,160,.25);font-size:13px;text-align:center;padding:24px 0}
-.pm-stats{font-size:11px;color:rgba(255,230,160,.35);margin-bottom:12px;letter-spacing:1px}
-
-.all-winners-scroll::-webkit-scrollbar{display:none}
-.all-winners-scroll{-ms-overflow-style:none;scrollbar-width:none}
 </style>
 </head>
 <body>
@@ -412,7 +289,7 @@ body{font-family:'Noto Serif TC',serif;position:relative}
   <div id="showcaseContent">
     <div class="stage-label">✦ 即將抽出 ✦</div>
     <div class="stage-prize-name" id="sc-name">載入中...</div>
-    <div id="sc-media" style="flex: 1 0 0;"></div>
+    <div id="sc-media"></div>
   </div>
 
   <!-- DRAW -->
@@ -450,6 +327,26 @@ body{font-family:'Noto Serif TC',serif;position:relative}
 <!-- HISTORY -->
 <div class="history-bar" id="histBar"></div>
 
+<!-- TOP RIGHT CONTROLS -->
+<div style="position:fixed;top:12px;right:12px;z-index:20;display:flex;gap:8px;align-items:center;">
+  <button onclick="skipPrize()" title="跳過當前獎項" style="
+    padding:8px 14px;
+    background:rgba(30,20,0,.82);
+    border:1.5px solid rgba(201,168,76,.45);
+    border-radius:20px;
+    color:rgba(245,197,24,.8);
+    font-family:'Noto Serif TC',serif;
+    font-size:12px;
+    cursor:pointer;
+    letter-spacing:1px;
+    transition:all .18s;
+    backdrop-filter:blur(4px);
+  " onmouseover="this.style.borderColor='rgba(245,197,24,.9)';this.style.color='rgba(245,197,24,1)'"
+     onmouseout="this.style.borderColor='rgba(201,168,76,.45)';this.style.color='rgba(245,197,24,.8)'">
+    ⏭ 跳過獎項
+  </button>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
@@ -482,7 +379,7 @@ function init(){
   });
   db.ref('history').on('value',s=>{
     const r=s.val();
-    history=r?Object.values(r).sort((a,b)=>a.timestamp-b.timestamp):[];
+    history=r?Object.values(r).sort((a,b)=>b.timestamp-a.timestamp):[];
     renderHistBar();
   });
   db.ref('state').on('value',s=>{lstate=s.val()||{currentPrizeIdx:0,phase:'idle'};updUI();});
@@ -491,7 +388,7 @@ function init(){
 
 function sizeBall(){
   const vw=window.innerWidth,vh=window.innerHeight;
-  ballSize=Math.min(Math.floor(vh*.56),Math.floor(vw*.47),720);
+  ballSize=Math.min(Math.floor(vh*.26),Math.floor(vw*.21),320);
   const c=document.getElementById('ballCanvas');
   c.width=ballSize;c.height=ballSize;
   c.style.width=ballSize+'px';c.style.height=ballSize+'px';
@@ -503,55 +400,6 @@ function setScreen(s){
   document.getElementById('drawContent').style.display=s==='draw'?'flex':'none';
   document.getElementById('resultContent').style.display=s==='result'?'flex':'none';
   document.getElementById('bottomBtnArea').style.display=s==='result'?'none':'flex';
-  // 離開 showcase 時停止垂直跑馬燈
-  if(s !== 'showcase') stopWinnersMarquee();
-}
-
-let winnersMarqueeRAF = null;
-let winnersMarqueeY = 0;
-let winnersMarqueeRunId = 0;
-
-function startWinnersMarquee(){
-  winnersMarqueeRunId++;
-  const myId = winnersMarqueeRunId;
-  if(winnersMarqueeRAF){ cancelAnimationFrame(winnersMarqueeRAF); winnersMarqueeRAF=null; }
-  winnersMarqueeY = 0; // 從頂部開始往上滾
-  function step(){
-    if(myId !== winnersMarqueeRunId) return;
-    const track = document.getElementById('winners-marquee-track');
-    if(!track){ winnersMarqueeRAF=null; return; }
-    winnersMarqueeY -= 0.6; // 速度，負數 = 往上滾，調整這個數字控制快慢
-    const halfH = track.scrollHeight / 2;
-    if(halfH > 0 && winnersMarqueeY <= -halfH) winnersMarqueeY += halfH;
-    track.style.transform = `translateY(${winnersMarqueeY}px)`;
-    winnersMarqueeRAF = requestAnimationFrame(step);
-  }
-  winnersMarqueeRAF = requestAnimationFrame(step);
-}
-
-function stopWinnersMarquee(){
-  winnersMarqueeRunId++;
-  if(winnersMarqueeRAF){ cancelAnimationFrame(winnersMarqueeRAF); winnersMarqueeRAF=null; }
-}
-
-function renderAllWinners(){
-  if(!history.length) return '<div style="color:rgba(100,30,0,.5);font-size:14px;letter-spacing:2px;">✦ 所有獎項已抽完 ✦</div>';
-  const rows = history.map(h=>`
-    <div style="margin-bottom:18px;text-align:center;">
-      <div style="font-size:28px;color:rgba(100,30,0,.55);letter-spacing:2px;margin-bottom:4px;">🏆 ${h.prize}</div>
-      <div style="font-family:'Yuji Syuku',cursive;font-size:28px;color:#7a1500;line-height:1.5;">
-        ${h.winners.join('　')}
-      </div>
-    </div>`).join('');
-  return `
-    <div style="text-align:center;margin-bottom:14px;flex-shrink:0;">
-      <div style="font-family:'Yuji Syuku',cursive;font-size:clamp(18px,2.5vw,32px);color:#7a1500;letter-spacing:4px;">✦ 所有獎項已抽完 ✦</div>
-    </div>
-      <div class="all-winners-scroll" style="height:90%;overflow:hidden;position:relative;">
-      <div id="winners-marquee-track" style="position:absolute;width:100%;will-change:transform;">
-        ${rows}${rows}
-      </div>
-    </div>`;
 }
 
 function updUI(){
@@ -562,18 +410,12 @@ function updUI(){
   const hint=document.getElementById('drawHint');
 
   if(!prizes.length||idx>=prizes.length){
-      setScreen('showcase');
-      if(!prizes.length){
-        document.getElementById('sc-name').textContent='請先在後台設定獎項';
-        document.getElementById('sc-media').innerHTML='';
-      } else {
-        document.getElementById('sc-name').textContent='';
-        document.getElementById('sc-media').innerHTML=renderAllWinners();
-        setTimeout(()=>startWinnersMarquee(), 200);
-      }
-      btn.disabled=true;hint.textContent='';
-      return;
-    }
+    setScreen('showcase');
+    document.getElementById('sc-name').textContent=!prizes.length?'請先在後台設定獎項':'🎉 所有獎項已抽完！';
+    document.getElementById('sc-media').innerHTML='';
+    btn.disabled=true;hint.textContent='';
+    return;
+  }
 
   const p=prizes[idx];
 
@@ -602,14 +444,8 @@ function updUI(){
 function showShowcase(idx){
   setScreen('showcase');
   if(!prizes.length||idx>=prizes.length){
-    if(!prizes.length){
-      document.getElementById('sc-name').textContent='請先在後台設定獎項';
-      document.getElementById('sc-media').innerHTML='';
-    } else {
-          document.getElementById('sc-name').textContent='';
-          document.getElementById('sc-media').innerHTML=renderAllWinners();
-          setTimeout(()=>startWinnersMarquee(), 200);
-    }
+    document.getElementById('sc-name').textContent=!prizes.length?'請先在後台設定獎項':'🎉 所有獎項已抽完！';
+    document.getElementById('sc-media').innerHTML='';
     document.getElementById('drawBtn').disabled=true;
     document.getElementById('drawHint').textContent='';
     return;
@@ -628,9 +464,8 @@ function showShowcase(idx){
 }
 
 function onDrawBtnClick(){
-  // doDraw();
   if(screen==='showcase'){setScreen('draw');updUI();}
-  else if(screen==='draw'){doDraw();} 
+  else if(screen==='draw'){doDraw();}
 }
 
 function lsv(bc,tc){
@@ -737,91 +572,28 @@ async function confirmAndNext(){
   const hk=Date.now().toString(36);
   const u={};
   u['history/'+hk]={prize:prize.name,winners:aw,timestamp:Date.now()};
-  u['state/currentPrizeIdx']=idx+1;
+  // Always advance to next prize — remaining was already decremented during doDraw.
+  // Re-read from Firebase local cache to get the latest value.
+  const latestRemaining = prizes[idx]?.remaining ?? 0;
+  u['state/currentPrizeIdx'] = latestRemaining <= 0 ? idx + 1 : idx;
   u['state/phase']='idle';
   await db.ref().update(u);
   currentWinners=[];pendingRemovals=[];
-  lstate.currentPrizeIdx=idx+1;
+  // Manually update lstate so showShowcase uses the new index immediately
+  lstate.currentPrizeIdx = u['state/currentPrizeIdx'];
+  setScreen('showcase');
   showShowcase(lstate.currentPrizeIdx);
 }
 
-let marqueeX = window.innerWidth;
-let marqueeRAF = null;
-let marqueeSpeed = 1.4;
-let marqueeRunId = 0; // 每次啟動給一個唯一 ID，舊 loop 發現 ID 不對就自動停止
-
-function startMarquee(){
-  marqueeRunId++; // 讓所有舊的 loop 失效
-  const myId = marqueeRunId;
-  if(marqueeRAF){ cancelAnimationFrame(marqueeRAF); marqueeRAF=null; }
-  function step(){
-    if(myId !== marqueeRunId) return; // 我已經是舊的了，停止
-    const track = document.getElementById('marquee-track');
-    if(!track){ marqueeRAF=null; return; }
-    marqueeX -= marqueeSpeed;
-    const halfW = track.scrollWidth / 2;
-    if(halfW > 0 && marqueeX <= -halfW) marqueeX += halfW;
-    track.style.transform = `translateX(${marqueeX}px)`;
-    marqueeRAF = requestAnimationFrame(step);
-  }
-  marqueeRAF = requestAnimationFrame(step);
-}
-
 function renderHistBar(){
-  const el = document.getElementById('histBar');
-  if(!history.length){ el.innerHTML=''; return; }
-
-  let track = document.getElementById('marquee-track');
-
-  if(!track){
-    // 第一次：建立 track，初始化位置從右側進入
-    marqueeX = window.innerWidth;
-    const items = history.map(h =>
-      `<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`
-    ).join('');
-    el.innerHTML = `<div id="marquee-track" class="marquee-track">${items}${items}</div>`;
-    el.dataset.count = history.length;
-    // 等 DOM 渲染完成、字體載入後再啟動，避免 scrollWidth 不準
-    setTimeout(()=>startMarquee(), 200);
-    return;
-  }
-
- // 有新紀錄才更新內容
-  const currentCount = parseInt(el.dataset.count || '0');
-  if(history.length <= currentCount) return;
-
-  // 停掉動畫
-  if(marqueeRAF){ cancelAnimationFrame(marqueeRAF); marqueeRAF=null; }
-
-  // 保留當前位移，重建內容
-  const items = history.map(h =>
-    `<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`
-  ).join('');
-  el.innerHTML = `<div id="marquee-track" class="marquee-track">${items}${items}</div>`;
-  // 繼續從目前位置跑，不重置 marqueeX
-  document.getElementById('marquee-track').style.transform = `translateX(${marqueeX}px)`;
-  el.dataset.count = history.length;
-  startMarquee(); // 重新啟動（舊的已確實停止）
+  const el=document.getElementById('histBar');
+  if(!history.length){el.innerHTML='';return;}
+  el.innerHTML=history.slice(0,5).map(h=>`<div class="hb-item"><span>${h.prize}</span>${h.winners.join('、')}</div>`).join('');
 }
 
 /* ── BALL ── */
-const BC=[
-  '#1a6b3a', // 墨綠
-  '#b8860b', // 深金
-  '#1a3a7a', // 深藍
-  '#6b1a6b', // 深紫
-  '#c07000', // 橙金
-  '#1a6b6b', // 深青
-  '#7a1a1a', // 深酒紅
-  '#3a5a1a', // 橄欖綠
-];
+const BC=['#8b0000','#9a0010','#c0152a','#720000'];
 const BRR=0.074;
-
-function nameToColor(name){
-  let hash=0;
-  for(let i=0;i<name.length;i++) hash=name.charCodeAt(i)+((hash<<5)-hash);
-  return BC[Math.abs(hash)%BC.length];
-}
 
 function populateBalls(){
   const pool=Object.values(members).filter(m=>m.inPool);
@@ -830,7 +602,7 @@ function populateBalls(){
     const a=Math.random()*Math.PI*2,r=Math.random()*(R-br-6);
     return{name:m.name,x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r,
       vx:(Math.random()-.5)*1.4,vy:(Math.random()-.5)*1.4,
-      color:nameToColor(m.name)}; // 用名字決定顏色，固定不變
+      color:BC[Math.floor(Math.random()*BC.length)]};
   });
 }
 
@@ -839,106 +611,32 @@ function startBallAnim(){
   (function f(){drawBall();ballAnim=requestAnimationFrame(f);})();
 }
 
-function darkenColor(hex){
-  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-  return `rgb(${Math.max(r-60,0)},${Math.max(g-60,0)},${Math.max(b-60,0)})`;
-}
-
-function lightenColor(hex){
-  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-  return `rgb(${Math.min(r+80,255)},${Math.min(g+80,255)},${Math.min(b+80,255)})`;
-}
-
 function drawBall(){
   const c=document.getElementById('ballCanvas');if(!c)return;
   const ctx=c.getContext('2d');
   const sz=ballSize||240,cx=sz/2,cy=sz/2,R=sz/2-2,br=Math.floor(sz*BRR),spd=isSpinning?4.5:1;
-
-  // 搖晃偏移（抽獎中才啟動）
-  const shakeX = 0;
-  const shakeY = 0;
-
   ctx.clearRect(0,0,sz,sz);
-  ctx.save();
-  ctx.translate(shakeX, shakeY);
-
-  // ── 大球背景 ──
-  const sg=ctx.createRadialGradient(cx-sz*.22,cy-sz*.22,sz*.04,cx,cy,R);
-  sg.addColorStop(0,'#c01020');
-  sg.addColorStop(0.4,'#8a0010');
-  sg.addColorStop(1,'#380000');
+  const sg=ctx.createRadialGradient(cx-sz*.18,cy-sz*.18,sz*.05,cx,cy,R);
+  sg.addColorStop(0,'#d0102a');sg.addColorStop(.5,'#9a0015');sg.addColorStop(1,'#480000');
   ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();
-
-  // 大球高光（左上強反光）
-  const hi=ctx.createRadialGradient(cx-R*.42,cy-R*.42,R*.02,cx-R*.28,cy-R*.28,R*.55);
-  hi.addColorStop(0,'rgba(255,255,255,.55)');
-  hi.addColorStop(0.4,'rgba(255,255,255,.12)');
-  hi.addColorStop(1,'rgba(255,255,255,0)');
-  ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=hi;ctx.fill();
-
-  // 大球底部陰影
-  const sh2=ctx.createRadialGradient(cx+R*.3,cy+R*.35,R*.05,cx+R*.2,cy+R*.25,R*.6);
-  sh2.addColorStop(0,'rgba(0,0,0,.45)');
-  sh2.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=sh2;ctx.fill();
-
-  // ── 小球 ──
+  const sh=ctx.createRadialGradient(cx-sz*.2,cy-sz*.2,2,cx-sz*.12,cy-sz*.12,sz*.26);
+  sh.addColorStop(0,'rgba(255,255,255,.22)');sh.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=sh;ctx.fill();
   balls.forEach(b=>{
     b.x+=b.vx*spd;b.y+=b.vy*spd;
     const d=Math.sqrt((b.x-cx)**2+(b.y-cy)**2),mD=R-br-2;
-    if(d>mD){
-      const nx=(b.x-cx)/d,ny=(b.y-cy)/d,dot=b.vx*nx+b.vy*ny;
-      b.vx-=2*dot*nx;b.vy-=2*dot*ny;
-      b.x=cx+nx*mD;b.y=cy+ny*mD;
-    }
-
-    // 小球主體漸層
-    const bg=ctx.createRadialGradient(b.x-br*.32,b.y-br*.38,br*.06,b.x,b.y,br);
-    bg.addColorStop(0,lightenColor(b.color));
-    bg.addColorStop(0.6,b.color);
-    bg.addColorStop(1,darkenColor(b.color));
+    if(d>mD){const nx=(b.x-cx)/d,ny=(b.y-cy)/d,dot=b.vx*nx+b.vy*ny;b.vx-=2*dot*nx;b.vy-=2*dot*ny;b.x=cx+nx*mD;b.y=cy+ny*mD;}
+    const bg=ctx.createRadialGradient(b.x-br*.3,b.y-br*.4,br*.08,b.x,b.y,br);
+    bg.addColorStop(0,'#d8102a');bg.addColorStop(1,'#540000');
     ctx.beginPath();ctx.arc(b.x,b.y,br,0,Math.PI*2);ctx.fillStyle=bg;ctx.fill();
-
-    // 小球高光（左上白色光點）
-    const bhi=ctx.createRadialGradient(
-      b.x-br*.38,b.y-br*.42,br*.02,
-      b.x-br*.22,b.y-br*.26,br*.45
-    );
-    bhi.addColorStop(0,'rgba(255,255,255,.75)');
-    bhi.addColorStop(0.35,'rgba(255,255,255,.2)');
-    bhi.addColorStop(1,'rgba(255,255,255,0)');
-    ctx.beginPath();ctx.arc(b.x,b.y,br,0,Math.PI*2);ctx.fillStyle=bhi;ctx.fill();
-
-    // 小球底部暗影
-    const bsh=ctx.createRadialGradient(b.x+br*.3,b.y+br*.32,br*.04,b.x+br*.18,b.y+br*.2,br*.5);
-    bsh.addColorStop(0,'rgba(0,0,0,.4)');
-    bsh.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.beginPath();ctx.arc(b.x,b.y,br,0,Math.PI*2);ctx.fillStyle=bsh;ctx.fill();
-
-    // 小球邊框（金色細線）
-    ctx.beginPath();ctx.arc(b.x,b.y,br,0,Math.PI*2);
-    ctx.strokeStyle='rgba(245,197,24,.35)';ctx.lineWidth=1;ctx.stroke();
-
-    // 名字
-    const fs=b.name.length>3?Math.floor(br*.68):Math.floor(br*.82);
-    ctx.fillStyle='rgba(255,255,255,.92)';
-    ctx.font=`bold ${fs}px "Noto Serif TC",serif`;
+    ctx.strokeStyle='rgba(245,197,24,.42)';ctx.lineWidth=1;ctx.stroke();
+    const fs=b.name.length>3?Math.floor(br*.7):Math.floor(br*.84);
+    ctx.fillStyle='#fff';ctx.font=`bold ${fs}px "Noto Serif TC",serif`;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    // 文字陰影
-    ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=3;
     ctx.fillText(b.name.length>4?b.name.slice(0,4)+'…':b.name,b.x,b.y);
-    ctx.shadowBlur=0;
   });
-
-  // 大球邊框金環
   ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);
-  ctx.strokeStyle='rgba(245,197,24,.7)';ctx.lineWidth=3;ctx.stroke();
-
-  // 大球內環（增加層次感）
-  ctx.beginPath();ctx.arc(cx,cy,R-4,0,Math.PI*2);
-  ctx.strokeStyle='rgba(245,197,24,.2)';ctx.lineWidth=1.5;ctx.stroke();
-
-  ctx.restore();
+  ctx.strokeStyle='rgba(245,197,24,.6)';ctx.lineWidth=3;ctx.stroke();
 }
 
 /* ── FIREWORKS ── */
@@ -970,53 +668,13 @@ function animFW(ctx,c){
   fwAnim=requestAnimationFrame(()=>animFW(ctx,c));
 }
 
-function toggleModal(){
-  const m=document.getElementById('poolModal');
-  const isOpen=m.style.display==='flex';
-  if(!isOpen){renderModalPool();renderModalHist();}
-  m.style.display=isOpen?'none':'flex';
-}
-
-function switchTab(tab){
-  document.getElementById('modal-pool-content').style.display=tab==='pool'?'block':'none';
-  document.getElementById('modal-hist-content').style.display=tab==='hist'?'block':'none';
-  document.getElementById('tab-pool').className='pmt'+(tab==='pool'?' active':'');
-  document.getElementById('tab-hist').className='pmt'+(tab==='hist'?' active':'');
-}
-
-function renderModalPool(){
-  const el=document.getElementById('modal-pool-content');
-  const arr=Object.values(members);
-  if(!arr.length){el.innerHTML='<div class="pm-empty">名單為空</div>';return;}
-  const inPool=arr.filter(m=>m.inPool).length;
-  el.innerHTML=`<div class="pm-stats">共 ${arr.length} 人　抽獎池剩餘 ${inPool} 人　已抽出 ${arr.length-inPool} 人</div>
-    <div class="pm-pool-grid">${arr.map(m=>`<div class="pm-chip ${m.inPool?'':'drawn'}">${m.name}</div>`).join('')}</div>`;
-}
-
-function renderModalHist(){
-  const el=document.getElementById('modal-hist-content');
-  if(!history.length){el.innerHTML='<div class="pm-empty">尚未有得獎紀錄</div>';return;}
-  el.innerHTML=history.map(h=>`
-    <div class="pm-hist-item">
-      <span class="pm-hist-prize">🏆 ${h.prize}</span>
-      <span class="pm-hist-names">${h.winners.join('、')}</span>
-    </div>`).join('');
+function skipPrize(){
+  const idx=lstate.currentPrizeIdx||0;
+  if(!prizes.length||idx>=prizes.length)return;
+  db.ref('state').update({currentPrizeIdx:idx+1,phase:'idle'});
 }
 
 init();
 </script>
-<!-- ══ POOL MODAL ══ -->
-<button class="pool-modal-btn" onclick="toggleModal()">📋</button>
-<div class="pool-modal-backdrop" id="poolModal" style="display:none">
-  <div class="pool-modal" onclick="event.stopPropagation()">
-    <button class="pool-modal-close" onclick="toggleModal()">✕</button>
-    <div class="pool-modal-tabs">
-      <button class="pmt active" id="tab-pool" onclick="switchTab('pool')">🎱 抽獎池</button>
-      <button class="pmt" id="tab-hist" onclick="switchTab('hist')">🏆 得獎紀錄</button>
-    </div>
-    <div id="modal-pool-content" class="pool-modal-content"></div>
-    <div id="modal-hist-content" class="pool-modal-content" style="display:none"></div>
-  </div>
-</div>
 </body>
 </html>

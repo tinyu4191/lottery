@@ -2,142 +2,239 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>抽獎後台管理</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0a;--bg2:#111111;--bg3:#1a1a1a;--bg4:#222222;--border:#2a2a2a;--border2:#333333;--text:#e8e8e8;--text2:#888888;--text3:#555555;--gold:#c9a84c;--gold-l:#e8c97a;--gold-d:#8a6a20;--gold-dim:rgba(201,168,76,.1);--green:#3d9970;--red:#e74c3c;--r:8px}
+:root{
+  --bg:#0a0a0a;--bg2:#111111;--bg3:#1a1a1a;--bg4:#222222;
+  --border:#2a2a2a;--border2:#333333;
+  --text:#e8e8e8;--text2:#888888;--text3:#555555;
+  --gold:#c9a84c;--gold-l:#e8c97a;--gold-d:#8a6a20;--gold-dim:rgba(201,168,76,.1);
+  --green:#3d9970;--red:#e74c3c;--r:8px;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;font-size:14px}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .ttl{font-size:15px;font-weight:700}.ttl span{color:var(--gold)}
 .tag{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:2px 8px}
-.tr{display:flex;align-items:center;gap:12px}
-.sp{display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text2)}
+.topbar-r{display:flex;align-items:center;gap:10px}
+.sp{display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text2)}
 .sd{width:7px;height:7px;border-radius:50%;background:var(--text3);transition:all .3s;flex-shrink:0}
 .sd.on{background:var(--green);box-shadow:0 0 6px var(--green)}.sd.off{background:var(--red);box-shadow:0 0 6px var(--red)}
-.bla{display:flex;align-items:center;gap:5px;padding:7px 16px;background:var(--gold-dim);border:1px solid var(--gold-d);border-radius:var(--r);color:var(--gold-l);font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .18s}
-.bla:hover{background:rgba(201,168,76,.2);color:var(--gold-l)}
-.layout{display:grid;grid-template-columns:1fr 1fr;height:calc(100vh - 52px);overflow:hidden}
+.bla{display:flex;align-items:center;gap:4px;padding:7px 12px;background:var(--gold-dim);border:1px solid var(--gold-d);border-radius:var(--r);color:var(--gold-l);font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .18s;white-space:nowrap}
+.bla:hover{background:rgba(201,168,76,.2)}
+
+/* ── DESKTOP LAYOUT ── */
+.desktop-layout{display:grid;grid-template-columns:1fr 1fr;height:calc(100vh - 52px);overflow:hidden}
 .panel{display:flex;flex-direction:column;overflow:hidden}
 .panel:first-child{border-right:1px solid var(--border)}
-.sh{padding:13px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg2)}
+
+/* ── MOBILE TAB LAYOUT ── */
+.mobile-layout{display:none;flex-direction:column;height:calc(100vh - 52px)}
+.tab-bar{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
+.tab-btn{flex:1;padding:12px 4px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;text-align:center;letter-spacing:.5px}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{flex:1;overflow:hidden;display:none;flex-direction:column}
+.tab-content.active{display:flex}
+
+/* ── SECTION ── */
+.sh{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg2)}
 .sht{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3)}
 .shr{display:flex;align-items:center;gap:8px}
-.sb{padding:16px 20px;flex:1;overflow-y:auto}
+.sb{padding:14px 16px;flex:1;overflow-y:auto}
+
+/* ── FORM ── */
 .field{margin-bottom:12px}
 .field>label{display:block;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
-input[type=text],input[type=number],textarea{width:100%;padding:8px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s}
+input[type=text],input[type=number],textarea{width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none}
 input:focus,textarea:focus{border-color:var(--gold-d);box-shadow:0 0 0 3px rgba(201,168,76,.07)}
 input::placeholder,textarea::placeholder{color:var(--text3)}
-textarea{resize:vertical;min-height:88px}
-.btn{display:inline-flex;align-items:center;gap:4px;padding:7px 16px;border:1px solid transparent;border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
+textarea{resize:vertical;min-height:80px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:10px 18px;border:1px solid transparent;border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;-webkit-tap-highlight-color:transparent}
 .btn:disabled{opacity:.3;cursor:not-allowed}
 .bp{background:var(--gold);border-color:var(--gold);color:#100c00;font-weight:700}.bp:hover:not(:disabled){background:var(--gold-l)}
-.bg_{background:transparent;border-color:transparent;color:var(--text3);padding:5px 10px;font-size:12px}.bg_:hover:not(:disabled){color:var(--text2)}
-.bd{background:transparent;border-color:transparent;color:#663333;font-size:12px;padding:5px 10px}.bd:hover:not(:disabled){color:var(--red)}
-.bsm{padding:5px 12px;font-size:12px}.bxs{padding:3px 8px;font-size:11px}
-.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.chip{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace}
+.bg_{background:transparent;border-color:transparent;color:var(--text3);padding:8px 10px;font-size:12px}.bg_:hover:not(:disabled){color:var(--text2)}
+.bd{background:transparent;border-color:transparent;color:#663333;font-size:12px;padding:8px 10px}.bd:hover:not(:disabled){color:var(--red)}
+.bsm{padding:7px 14px;font-size:12px}.bxs{padding:4px 10px;font-size:11px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* ── SKIP BUTTON (prominent) ── */
+.skip-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.08));
+  border:1.5px solid var(--gold-d);border-radius:var(--r);
+  color:var(--gold-l);font-family:'Noto Sans TC',sans-serif;
+  font-size:15px;font-weight:700;cursor:pointer;
+  transition:all .18s;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.skip-btn:hover{background:rgba(201,168,76,.25);border-color:var(--gold)}
+.skip-btn:active{transform:scale(.98)}
+
+/* ── CHIPS ── */
+.chip{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace}
 .cg{background:var(--gold-dim);border:1px solid var(--gold-d);color:var(--gold)}
 .cgr{background:rgba(61,153,112,.1);border:1px solid rgba(61,153,112,.3);color:var(--green)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.cr{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:var(--red)}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
 .stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
-.stn{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--gold);line-height:1}
+.stn{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;color:var(--gold);line-height:1}
 .stl{font-size:11px;color:var(--text3);margin-top:3px}
-.mgrid{display:flex;flex-wrap:wrap;gap:5px;max-height:240px;overflow-y:auto}
-.mc{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;font-size:13px;color:var(--text)}
+
+/* ── PROGRESS OVERVIEW (mobile) ── */
+.progress-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.pc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:8px}
+.pc-prize{font-size:20px;font-weight:700;color:var(--gold);line-height:1.2;margin-bottom:4px}
+.pc-sub{font-size:12px;color:var(--text3)}
+.pc-next{font-size:11px;color:var(--text3);margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
+.warn-card{background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.25);border-radius:var(--r);padding:12px;margin-bottom:12px;font-size:13px;color:#ff9999}
+
+.prize-list{display:flex;flex-direction:column;gap:6px}
+.prow{display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:grab;transition:all .15s;user-select:none}
+.prow:active{cursor:grabbing}
+.prow.drag-over{border-color:var(--gold-d);background:var(--gold-dim)}
+.prow.dragging{opacity:.2}
+.prow.cur{border-color:var(--gold-d);background:var(--gold-dim)}
+.prow.done{opacity:.3}
+.dh{color:var(--text3);font-size:16px;cursor:grab;flex-shrink:0}
+.pnum{width:22px;height:22px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);flex-shrink:0}
+.prow.cur .pnum{border-color:var(--gold-d);color:var(--gold);background:var(--gold-dim)}
+.pni{flex:1;background:transparent;border:none;color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:14px;padding:0;outline:none;min-width:60px}
+.prl{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);min-width:50px;text-align:right;flex-shrink:0}
+.prow.cur .prl{color:var(--gold)}
+.pdel{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;flex-shrink:0;transition:color .15s;padding:4px}
+.pdel:hover{color:var(--red)}
+
+.mgrid{display:flex;flex-wrap:wrap;gap:6px;max-height:220px;overflow-y:auto}
+.mc{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;font-size:13px;color:var(--text)}
 .mc.drawn{opacity:.28;text-decoration:line-through;color:var(--text3)}
-.mc .xb{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;line-height:1;padding:0 1px;transition:color .15s}
+.mc .xb{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;line-height:1;padding:0 2px;transition:color .15s}
 .mc .xb:hover{color:var(--red)}
+
 .iz{border:1px dashed var(--border2);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:12px}
 .iz:hover,.iz.dg{border-color:var(--gold-d);background:var(--gold-dim)}
 .iz input{display:none}.iz p{font-size:12px;color:var(--text3);margin-top:3px}
 .div_{height:1px;background:var(--border);margin:14px 0}
-/* PRIZE LIST */
-.plist{display:flex;flex-direction:column;gap:10px}
-.prow{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .15s}
-.prow:hover{border-color:var(--border2)}
-.prow-head{display:flex;align-items:center;gap:9px;padding:10px 12px;cursor:grab;user-select:none}
-.prow-head:active{cursor:grabbing}
-.prow.drag-over{border-color:var(--gold-d);background:var(--gold-dim)}
-.prow.dragging{opacity:.2}
-.dh{color:var(--text3);font-size:16px;cursor:grab;flex-shrink:0}
-.pnum{width:22px;height:22px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);flex-shrink:0}
-.pni{flex:1;background:transparent;border:none;color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:14px;padding:0;outline:none;min-width:60px}
-.prl{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);min-width:50px;text-align:right;flex-shrink:0}
-.pdel{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;flex-shrink:0;transition:color .15s}
-.pdel:hover{color:var(--red)}
-/* photo upload area inside prize row */
-.prow-photo{border-top:1px solid var(--border);padding:10px 12px;display:flex;align-items:center;gap:12px}
-.photo-thumb{width:56px;height:56px;border-radius:6px;object-fit:cover;border:1px solid var(--border2);flex-shrink:0;background:var(--bg4)}
-.photo-placeholder{width:56px;height:56px;border-radius:6px;border:1px dashed var(--border2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:var(--bg4)}
-.photo-info{flex:1;min-width:0}
-.photo-name{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px}
-.photo-actions{display:flex;gap:6px}
-.photo-upload-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}
-.photo-upload-btn:hover{border-color:var(--gold-d);color:var(--gold-l)}
-.photo-upload-input{display:none}
-.upload-progress{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;display:none}
-.upload-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width .3s;width:0%}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 20px;font-size:13px;color:var(--text);z-index:300;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:ti .25s ease,to_ .25s ease 2.2s forwards;pointer-events:none;white-space:nowrap}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 20px;font-size:13px;color:var(--text);z-index:300;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:ti .25s ease,to_ .25s ease 2.2s forwards;pointer-events:none;white-space:nowrap}
 @keyframes ti{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes to_{to{opacity:0}}
 .eh{color:var(--text3);font-size:12px;text-align:center;padding:14px 0}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:767px){
+  .desktop-layout{display:none}
+  .mobile-layout{display:flex}
+  .ttl{font-size:14px}
+  .tag{display:none}
+}
+@media(min-width:768px){
+  .desktop-layout{display:grid}
+  .mobile-layout{display:none}
+}
 </style>
 </head>
 <body>
 
 <header class="topbar">
-  <div style="display:flex;align-items:center;gap:12px">
-    <div class="ttl">🎊 <span>抽獎系統</span> 後台管理</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="ttl">🎊 <span>抽獎</span> 後台</div>
     <span class="tag">ADMIN</span>
   </div>
-  <div class="tr">
+  <div class="topbar-r">
     <div class="sp"><div class="sd" id="sdot"></div><span id="stxt">連線中</span></div>
-    <a href="lottery.html" target="_blank" class="bla">↗ 開啟抽獎畫面</a>
+    <a href="lottery.html" target="_blank" class="bla">↗ 抽獎畫面</a>
   </div>
 </header>
 
-<div class="layout">
-
-  <!-- ══ LEFT: MEMBERS ══ -->
+<!-- ══ DESKTOP ══ -->
+<div class="desktop-layout">
   <div class="panel">
     <div class="sh">
       <span class="sht">參與者名單</span>
       <div class="shr">
-        <span class="chip cg" id="tChip">0 人</span>
-        <span class="chip cgr" id="pChip">池 0</span>
+        <span class="chip cg" id="tChip-d">0 人</span>
+        <span class="chip cgr" id="pChip-d">池 0</span>
+      </div>
+    </div>
+    <div class="sb" id="members-sb-d"><!-- filled by renderM --></div>
+  </div>
+  <div class="panel">
+    <div class="sh">
+      <span class="sht">獎項設定</span>
+      <div class="shr">
+        <span style="font-size:11px;color:var(--text3)">拖拉調整順序</span>
+        <button class="btn bd bxs" onclick="clearAllP()">清除全部</button>
+      </div>
+    </div>
+    <div class="sb">
+      <div class="row" style="margin-bottom:14px">
+        <input type="text" id="pNI-d" placeholder="獎項名稱" style="flex:1" onkeydown="if(event.key==='Enter')addP()">
+        <input type="number" id="pCI-d" placeholder="名額" min="1" style="width:70px;flex-shrink:0" onkeydown="if(event.key==='Enter')addP()">
+        <button class="btn bp bsm" onclick="addP()" style="flex-shrink:0">新增</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+        <div class="stat"><div class="stn" id="pTotal-d">0</div><div class="stl">獎項數</div></div>
+        <div class="stat"><div class="stn" id="pTotalCount-d">0</div><div class="stl">總名額</div></div>
+        <div class="stat"><div class="stn" id="pDrawnCount-d">0</div><div class="stl">已抽出</div></div>
+      </div>
+      <div class="prize-list" id="pList-d"><div class="eh">尚未設定任何獎項</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MOBILE ══ -->
+<div class="mobile-layout">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchMTab('members',this)">🎋 名單</button>
+    <button class="tab-btn" onclick="switchMTab('prizes',this)">🏆 獎項</button>
+    <button class="tab-btn" onclick="switchMTab('progress',this)">📊 進度</button>
+  </div>
+
+  <!-- Members Tab -->
+  <div class="tab-content active" id="tab-members">
+    <div class="sh">
+      <span class="sht">參與者名單</span>
+      <div class="shr">
+        <span class="chip cg" id="tChip-m">0 人</span>
+        <span class="chip cgr" id="pChip-m">池 0</span>
       </div>
     </div>
     <div class="sb">
       <div class="stats">
-        <div class="stat"><div class="stn" id="sT">0</div><div class="stl">總人數</div></div>
-        <div class="stat"><div class="stn" id="sP">0</div><div class="stl">抽獎池</div></div>
-        <div class="stat"><div class="stn" id="sD">0</div><div class="stl">已抽出</div></div>
+        <div class="stat"><div class="stn" id="sT-m">0</div><div class="stl">總人數</div></div>
+        <div class="stat"><div class="stn" id="sP-m">0</div><div class="stl">抽獎池</div></div>
+        <div class="stat"><div class="stn" id="sD-m">0</div><div class="stl">已抽出</div></div>
       </div>
       <div class="field">
         <label>新增姓名</label>
         <div class="row">
-          <input type="text" id="mInp" placeholder="輸入姓名後按 Enter..." onkeydown="if(event.key==='Enter')addM()" style="flex:1">
+          <input type="text" id="mInp-m" placeholder="輸入姓名後按 Enter..." onkeydown="if(event.key==='Enter')addM()" style="flex:1">
           <button class="btn bp bsm" onclick="addM()">新增</button>
         </div>
       </div>
       <div class="field">
         <label>批次貼上（每行一名）</label>
-        <textarea id="bInp" placeholder="林春松&#10;陳毅宏&#10;李睿澄"></textarea>
+        <textarea id="bInp-m" placeholder="林春松&#10;陳毅宏"></textarea>
         <div class="row" style="margin-top:6px">
-          <button class="btn bp bsm" onclick="addBulk()">批次新增</button>
-          <button class="btn bg_ bsm" onclick="document.getElementById('bInp').value=''">清空</button>
+          <button class="btn bp bsm" onclick="addBulk('m')">批次新增</button>
+          <button class="btn bg_ bsm" onclick="document.getElementById('bInp-m').value=''">清空</button>
         </div>
       </div>
-      <div class="iz" onclick="document.getElementById('csvI').click()"
+      <div class="iz" onclick="document.getElementById('csvI-m').click()"
         ondragover="event.preventDefault();this.classList.add('dg')"
         ondragleave="this.classList.remove('dg')" ondrop="fileDrop(event)">
-        <input type="file" id="csvI" accept=".csv,.txt" onchange="importFile(event)">
+        <input type="file" id="csvI-m" accept=".csv,.txt" onchange="importFile(event)">
         <div style="font-size:20px">📂</div>
-        <p>點擊或拖曳 CSV / TXT 檔案匯入名單</p>
+        <p>點擊上傳 CSV / TXT</p>
       </div>
       <div class="div_"></div>
       <div class="row" style="justify-content:space-between;margin-bottom:10px">
@@ -147,34 +244,57 @@ textarea{resize:vertical;min-height:88px}
           <button class="btn bd bsm" onclick="clearAllM()">清除全部</button>
         </div>
       </div>
-      <div class="mgrid" id="mGrid"><div class="eh">尚未新增任何參與者</div></div>
+      <div class="mgrid" id="mGrid-m"><div class="eh">尚未新增任何參與者</div></div>
     </div>
   </div>
 
-  <!-- ══ RIGHT: PRIZES ══ -->
-  <div class="panel">
+  <!-- Prizes Tab -->
+  <div class="tab-content" id="tab-prizes">
     <div class="sh">
       <span class="sht">獎項設定</span>
       <div class="shr">
-        <span style="font-size:11px;color:var(--text3)">拖拉 ⠿ 調整抽獎順序</span>
         <button class="btn bd bxs" onclick="clearAllP()">清除全部</button>
       </div>
     </div>
     <div class="sb">
-      <div class="row" style="margin-bottom:16px">
-        <input type="text" id="pNI" placeholder="獎項名稱（例：三獎、特別獎）" style="flex:1" onkeydown="if(event.key==='Enter')addP()">
-        <input type="number" id="pCI" placeholder="名額" min="1" style="width:72px;flex-shrink:0" onkeydown="if(event.key==='Enter')addP()">
+      <div class="row" style="margin-bottom:14px">
+        <input type="text" id="pNI-m" placeholder="獎項名稱" style="flex:1" onkeydown="if(event.key==='Enter')addP()">
+        <input type="number" id="pCI-m" placeholder="名額" min="1" style="width:70px;flex-shrink:0" onkeydown="if(event.key==='Enter')addP()">
         <button class="btn bp bsm" onclick="addP()" style="flex-shrink:0">新增</button>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
-        <div class="stat"><div class="stn" id="pTotal">0</div><div class="stl">獎項數</div></div>
-        <div class="stat"><div class="stn" id="pTotalCount">0</div><div class="stl">總名額</div></div>
-        <div class="stat"><div class="stn" id="pDrawnCount">0</div><div class="stl">已抽出</div></div>
-      </div>
-      <div class="plist" id="pList"><div class="eh">尚未設定任何獎項</div></div>
+      <div class="prize-list" id="pList-m"><div class="eh">尚未設定任何獎項</div></div>
     </div>
   </div>
 
+  <!-- Progress Tab -->
+  <div class="tab-content" id="tab-progress">
+    <div class="sh">
+      <span class="sht">抽獎進度</span>
+    </div>
+    <div class="sb">
+      <!-- Warning -->
+      <div id="warn-box" style="display:none"></div>
+
+      <!-- Current Prize -->
+      <div class="progress-card" id="prog-current">
+        <div class="pc-label">當前獎項</div>
+        <div class="pc-prize" id="prog-name">—</div>
+        <div class="pc-sub" id="prog-remain">請先設定獎項</div>
+        <div class="pc-next" id="prog-next"></div>
+      </div>
+
+      <!-- Skip Button -->
+      <button class="skip-btn" onclick="skipP()" id="skip-btn-m">
+        ⏭ 跳過當前獎項
+      </button>
+
+      <div class="div_"></div>
+
+      <!-- All prizes overview -->
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">所有獎項進度</div>
+      <div id="all-prizes-progress"><div class="eh">尚未設定獎項</div></div>
+    </div>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -185,55 +305,77 @@ const FC={apiKey:"AIzaSyBGFmsS650FPekmUnx_jYuYCTU1FI7zi88",authDomain:"new-year-
 firebase.initializeApp(FC);
 const db=firebase.database();
 const storage=firebase.storage();
-let members={},prizes=[],dragIdx=null;
+let members={},prizes=[],lstate={currentPrizeIdx:0,phase:'idle'},dragIdx=null;
+
 function gid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
 function init(){
   db.ref('.info/connected').on('value',s=>{
     const d=document.getElementById('sdot'),t=document.getElementById('stxt');
     d.className='sd '+(s.val()?'on':'off');
-    t.textContent=s.val()?'Firebase 已連線':'連線中斷';
+    t.textContent=s.val()?'已連線':'斷線';
   });
   db.ref('members').on('value',s=>{members=s.val()||{};renderM();});
   db.ref('prizes').on('value',s=>{
     const r=s.val();
     prizes=r?(Array.isArray(r)?r:Object.values(r)).sort((a,b)=>a.order-b.order):[];
-    renderP();
+    renderP();renderProgress();
   });
+  db.ref('state').on('value',s=>{lstate=s.val()||{currentPrizeIdx:0,phase:'idle'};renderProgress();renderP();});
+}
+
+/* ── MOBILE TAB ── */
+function switchMTab(tab,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+  if(tab==='progress') renderProgress();
 }
 
 /* ── MEMBERS ── */
 function addM(){
-  const inp=document.getElementById('mInp'),name=inp.value.trim();
+  const inp=document.getElementById('mInp-m')||document.getElementById('mInp-d');
+  // try mobile first, then desktop input
+  const mInp=document.getElementById('mInp-m');
+  const active=mInp&&mInp.offsetParent?mInp:document.getElementById('mInp-d');
+  if(!active)return;
+  const name=active.value.trim();
   if(!name)return;
   if(Object.values(members).find(m=>m.name===name)){toast('此姓名已存在');return;}
   db.ref('members/'+gid()).set({name,inPool:true});
-  inp.value='';inp.focus();
+  active.value='';active.focus();
 }
-function addBulk(){
-  const names=document.getElementById('bInp').value.split('\n').map(n=>n.trim()).filter(Boolean);
+
+function addBulk(src){
+  const id=src==='m'?'bInp-m':'bInp-d';
+  const names=(document.getElementById(id)||{value:''}).value.split('\n').map(n=>n.trim()).filter(Boolean);
   if(!names.length)return;
   const ex=new Set(Object.values(members).map(m=>m.name));
   const u={};let n=0;
   names.forEach(name=>{if(!ex.has(name)){u['members/'+gid()+'_'+n]={name,inPool:true};ex.add(name);n++;}});
-  if(n){db.ref().update(u);document.getElementById('bInp').value='';toast('已新增 '+n+' 人');}
+  if(n){db.ref().update(u);document.getElementById(id).value='';toast('已新增 '+n+' 人');}
   else toast('沒有新增（名稱重複）');
 }
+
 function importFile(e){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
     const names=ev.target.result.split(/[\n,]/).map(n=>n.trim()).filter(Boolean);
-    document.getElementById('bInp').value=names.join('\n');
+    const targetId=document.getElementById('bInp-m')&&document.getElementById('bInp-m').offsetParent?'bInp-m':'bInp-d';
+    if(document.getElementById(targetId))document.getElementById(targetId).value=names.join('\n');
     toast('已載入 '+names.length+' 筆，請確認後點批次新增');
   };
   r.readAsText(f);e.target.value='';
 }
+
 function fileDrop(e){
   e.preventDefault();e.currentTarget.classList.remove('dg');
   const f=e.dataTransfer.files[0];if(!f)return;
   importFile({target:{files:[f],value:''}});
 }
+
 function removeM(id){db.ref('members/'+id).remove();}
 function clearAllM(){if(!confirm('確定清除所有名單？'))return;db.ref('members').remove();}
 function resetPool(){
@@ -246,79 +388,96 @@ function resetPool(){
   db.ref('history').remove();
   toast('已重置抽獎池');
 }
+
 function renderM(){
   const arr=Object.entries(members),tot=arr.length,pool=arr.filter(([,m])=>m.inPool).length;
-  document.getElementById('sT').textContent=tot;
-  document.getElementById('sP').textContent=pool;
-  document.getElementById('sD').textContent=tot-pool;
-  document.getElementById('tChip').textContent=tot+' 人';
-  document.getElementById('pChip').textContent='池 '+pool;
-  const g=document.getElementById('mGrid');
-  if(!arr.length){g.innerHTML='<div class="eh">尚未新增任何參與者</div>';return;}
-  g.innerHTML=arr.map(([id,m])=>`<div class="mc ${m.inPool?'':'drawn'}"><span>${m.name}</span><button class="xb" onclick="removeM('${id}')">×</button></div>`).join('');
+  // Desktop chips
+  ['tChip-d','tChip-m'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=tot+' 人';});
+  ['pChip-d','pChip-m'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='池 '+pool;});
+  // Mobile stats
+  ['sT-m'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=tot;});
+  ['sP-m'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=pool;});
+  ['sD-m'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=tot-pool;});
+
+  const html=!arr.length?'<div class="eh">尚未新增任何參與者</div>':
+    arr.map(([id,m])=>`<div class="mc ${m.inPool?'':'drawn'}"><span>${m.name}</span><button class="xb" onclick="removeM('${id}')">×</button></div>`).join('');
+
+  // Desktop member list (inside desktop sb)
+  const dSb=document.getElementById('members-sb-d');
+  if(dSb){
+    dSb.innerHTML=`
+      <div class="stats">
+        <div class="stat"><div class="stn">${tot}</div><div class="stl">總人數</div></div>
+        <div class="stat"><div class="stn">${pool}</div><div class="stl">抽獎池</div></div>
+        <div class="stat"><div class="stn">${tot-pool}</div><div class="stl">已抽出</div></div>
+      </div>
+      <div class="field">
+        <label>新增姓名</label>
+        <div class="row">
+          <input type="text" id="mInp-d" placeholder="輸入姓名後按 Enter..." onkeydown="if(event.key==='Enter')addMD()" style="flex:1">
+          <button class="btn bp bsm" onclick="addMD()">新增</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>批次貼上（每行一名）</label>
+        <textarea id="bInp-d" placeholder="林春松&#10;陳毅宏"></textarea>
+        <div class="row" style="margin-top:6px">
+          <button class="btn bp bsm" onclick="addBulk('d')">批次新增</button>
+          <button class="btn bg_ bsm" onclick="document.getElementById('bInp-d').value=''">清空</button>
+        </div>
+      </div>
+      <div class="iz" onclick="document.getElementById('csvI-d').click()"
+        ondragover="event.preventDefault();this.classList.add('dg')"
+        ondragleave="this.classList.remove('dg')" ondrop="fileDrop(event)">
+        <input type="file" id="csvI-d" accept=".csv,.txt" onchange="importFile(event)">
+        <div style="font-size:20px">📂</div>
+        <p>點擊或拖曳 CSV / TXT</p>
+      </div>
+      <div class="div_"></div>
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px">名單</span>
+        <div class="row">
+          <button class="btn bg_ bsm" onclick="resetPool()">♻ 重置池</button>
+          <button class="btn bd bsm" onclick="clearAllM()">清除全部</button>
+        </div>
+      </div>
+      <div class="mgrid">${html}</div>`;
+  }
+  // Mobile grid
+  const mGrid=document.getElementById('mGrid-m');
+  if(mGrid)mGrid.innerHTML=html;
+
+  renderProgress();
+}
+
+function addMD(){
+  const inp=document.getElementById('mInp-d');if(!inp)return;
+  const name=inp.value.trim();
+  if(!name)return;
+  if(Object.values(members).find(m=>m.name===name)){toast('此姓名已存在');return;}
+  db.ref('members/'+gid()).set({name,inPool:true});
+  inp.value='';inp.focus();
 }
 
 /* ── PRIZES ── */
 function addP(){
-  const name=document.getElementById('pNI').value.trim(),count=parseInt(document.getElementById('pCI').value)||1;
+  // get value from whichever input is visible
+  const nD=document.getElementById('pNI-d'),nM=document.getElementById('pNI-m');
+  const cD=document.getElementById('pCI-d'),cM=document.getElementById('pCI-m');
+  const ni=nD&&nD.offsetParent?nD:nM;
+  const ci=cD&&cD.offsetParent?cD:cM;
+  const name=(ni?ni.value:'').trim(),count=parseInt(ci?ci.value:1)||1;
   if(!name){toast('請輸入獎項名稱');return;}
-  saveP([...prizes,{name,count,remaining:count,order:prizes.length,photoURL:''}]);
-  document.getElementById('pNI').value='';document.getElementById('pCI').value='';
-  document.getElementById('pNI').focus();
+  saveP([...prizes,{name,count,remaining:count,order:prizes.length}]);
+  if(ni){ni.value='';ni.focus();}if(ci)ci.value='';
 }
-function removeP(i){
-  // also delete photo from storage if exists
-  if(prizes[i].photoURL){
-    try{storage.refFromURL(prizes[i].photoURL).delete();}catch(e){}
-  }
-  saveP(prizes.filter((_,j)=>j!==i));
-}
-function clearAllP(){
-  if(!confirm('確定清除所有獎項？'))return;
-  prizes.forEach(p=>{if(p.photoURL){try{storage.refFromURL(p.photoURL).delete();}catch(e){}}});
-  saveP([]);db.ref('state').set({currentPrizeIdx:0,phase:'idle'});
-}
+
+function removeP(i){saveP(prizes.filter((_,j)=>j!==i));}
+function clearAllP(){if(!confirm('確定清除所有獎項？'))return;saveP([]);db.ref('state').set({currentPrizeIdx:0,phase:'idle'});}
 function updPN(i,v){prizes[i].name=v;saveP(prizes);}
 function updPC(i,v){const n=parseInt(v)||1;prizes[i].count=prizes[i].remaining=n;saveP(prizes);}
 function saveP(arr){db.ref('prizes').set(arr.map((p,i)=>({...p,order:i})));}
 
-/* ── PHOTO UPLOAD ── */
-function triggerPhotoUpload(i){
-  document.getElementById('photoInput_'+i).click();
-}
-async function uploadPhoto(i,e){
-  const file=e.target.files[0];if(!file)return;
-  if(!file.type.startsWith('image/')){toast('請選擇圖片檔案');return;}
-  const bar=document.getElementById('pbar_'+i);
-  const prog=document.getElementById('pprog_'+i);
-  prog.style.display='block';
-  const ref=storage.ref('prizes/prize_'+i+'_'+Date.now()+'.'+file.name.split('.').pop());
-  const task=ref.put(file);
-  task.on('state_changed',
-    snap=>{const pct=Math.round(snap.bytesTransferred/snap.totalBytes*100);bar.style.width=pct+'%';},
-    err=>{toast('上傳失敗：'+err.message);prog.style.display='none';},
-    async()=>{
-      const url=await task.snapshot.ref.getDownloadURL();
-      prizes[i].photoURL=url;
-      saveP(prizes);
-      prog.style.display='none';
-      bar.style.width='0%';
-      toast('✅ 照片上傳成功');
-      e.target.value='';
-    }
-  );
-}
-function deletePhoto(i){
-  if(!confirm('確定刪除此獎品照片？'))return;
-  if(prizes[i].photoURL){
-    try{storage.refFromURL(prizes[i].photoURL).delete();}catch(err){}
-  }
-  prizes[i].photoURL='';
-  saveP(prizes);
-  toast('已刪除照片');
-}
-
-/* ── DRAG DROP ── */
 function ds(e,i){dragIdx=i;setTimeout(()=>document.getElementById('pr-'+i)?.classList.add('dragging'),0);}
 function do_(e,i){e.preventDefault();document.getElementById('pr-'+i)?.classList.add('drag-over');}
 function dl(e,i){document.getElementById('pr-'+i)?.classList.remove('drag-over');}
@@ -329,47 +488,106 @@ function dd(e,i){
   const m=prizes.splice(dragIdx,1)[0];prizes.splice(i,0,m);dragIdx=null;saveP(prizes);
 }
 
+function prizeRowHTML(p,i,idx){
+  return`<div class="prow ${i===idx?'cur':''} ${i<idx?'done':''}" id="pr-${i}" draggable="true"
+    ondragstart="ds(event,${i})" ondragover="do_(event,${i})" ondragleave="dl(event,${i})" ondrop="dd(event,${i})">
+    <span class="dh">⠿</span>
+    <div class="pnum">${i+1}</div>
+    <input class="pni" value="${p.name}" onchange="updPN(${i},this.value)">
+    <span style="font-size:11px;color:var(--text3);flex-shrink:0">名額</span>
+    <input type="number" value="${p.count}" min="1" onchange="updPC(${i},this.value)"
+      style="width:54px;padding:4px 7px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:center;outline:none;flex-shrink:0">
+    <span class="prl">${p.remaining}/${p.count}</span>
+    <button class="pdel" onclick="removeP(${i})">×</button>
+  </div>`;
+}
+
 function renderP(){
-  const el=document.getElementById('pList');
-  const tot=prizes.length;
-  const totalCount=prizes.reduce((s,p)=>s+p.count,0);
-  const drawnCount=prizes.reduce((s,p)=>s+(p.count-p.remaining),0);
-  document.getElementById('pTotal').textContent=tot;
-  document.getElementById('pTotalCount').textContent=totalCount;
-  document.getElementById('pDrawnCount').textContent=drawnCount;
-  if(!tot){el.innerHTML='<div class="eh">尚未設定任何獎項</div>';return;}
-  el.innerHTML=prizes.map((p,i)=>`
-    <div class="prow" id="pr-${i}"
-      ondragover="do_(event,${i})" ondragleave="dl(event,${i})" ondrop="dd(event,${i})">
-      <div class="prow-head" draggable="true" ondragstart="ds(event,${i})">
-        <span class="dh">⠿</span>
-        <div class="pnum">${i+1}</div>
-        <input class="pni" value="${p.name}" onchange="updPN(${i},this.value)">
-        <span style="font-size:11px;color:var(--text3);flex-shrink:0">名額</span>
-        <input type="number" value="${p.count}" min="1" onchange="updPC(${i},this.value)"
-          style="width:54px;padding:4px 7px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:center;outline:none;flex-shrink:0">
-        <span class="prl">${p.remaining}/${p.count}</span>
-        <button class="pdel" onclick="removeP(${i})">×</button>
-      </div>
-      <div class="prow-photo">
-        ${p.photoURL
-          ? `<img class="photo-thumb" src="${p.photoURL}" alt="獎品照片">`
-          : `<div class="photo-placeholder">🖼</div>`}
-        <div class="photo-info">
-          <div class="photo-name">${p.photoURL ? '已上傳獎品照片' : '尚未上傳獎品照片'}</div>
-          <div class="photo-actions">
-            <label class="photo-upload-btn">
-              📷 ${p.photoURL ? '更換照片' : '上傳照片'}
-              <input type="file" class="photo-upload-input" id="photoInput_${i}" accept="image/*" onchange="uploadPhoto(${i},event)">
-            </label>
-            ${p.photoURL ? `<button class="photo-upload-btn" onclick="deletePhoto(${i})" style="color:#774040">🗑 刪除</button>` : ''}
-          </div>
-          <div class="upload-progress" id="pprog_${i}">
-            <div class="upload-progress-bar" id="pbar_${i}"></div>
-          </div>
-        </div>
-      </div>
-    </div>`).join('');
+  const idx=lstate.currentPrizeIdx||0;
+  const tot=prizes.length,totalCount=prizes.reduce((s,p)=>s+p.count,0),drawnCount=prizes.reduce((s,p)=>s+(p.count-p.remaining),0);
+  // Desktop stats
+  ['pTotal-d'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=tot;});
+  ['pTotalCount-d'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=totalCount;});
+  ['pDrawnCount-d'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=drawnCount;});
+  const html=!tot?'<div class="eh">尚未設定任何獎項</div>':prizes.map((p,i)=>prizeRowHTML(p,i,idx)).join('');
+  ['pList-d','pList-m'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+}
+
+/* ── PROGRESS ── */
+function skipP(){
+  const newIdx=(lstate.currentPrizeIdx||0)+1;
+  db.ref('state').update({currentPrizeIdx:newIdx,phase:'idle'});
+  toast('已跳過當前獎項');
+}
+
+function renderProgress(){
+  const idx=lstate.currentPrizeIdx||0;
+  const pool=Object.values(members).filter(m=>m.inPool).length;
+  const totalRemaining=prizes.slice(idx).reduce((s,p)=>s+p.remaining,0);
+
+  // Warning
+  const warnBox=document.getElementById('warn-box');
+  if(warnBox){
+    if(prizes.length&&idx<prizes.length&&pool<totalRemaining){
+      warnBox.style.display='block';
+      warnBox.className='warn-card';
+      warnBox.innerHTML=`⚠ 抽獎池剩餘 <strong>${pool}</strong> 人，但剩餘獎項總名額 <strong>${totalRemaining}</strong> 名，人數不足！`;
+    } else {
+      warnBox.style.display='none';
+    }
+  }
+
+  // Current prize
+  const pName=document.getElementById('prog-name');
+  const pRemain=document.getElementById('prog-remain');
+  const pNext=document.getElementById('prog-next');
+  const skipBtn=document.getElementById('skip-btn-m');
+  if(pName){
+    if(!prizes.length){pName.textContent='請先設定獎項';if(pRemain)pRemain.textContent='';if(pNext)pNext.textContent='';}
+    else if(idx>=prizes.length){pName.textContent='🎉 全部完成';if(pRemain)pRemain.textContent='';if(pNext)pNext.textContent='';}
+    else{
+      const p=prizes[idx];
+      pName.textContent=p.name;
+      if(pRemain)pRemain.textContent=`剩餘 ${p.remaining} 名　抽獎池 ${pool} 人`;
+      if(pNext)pNext.textContent=idx+1<prizes.length?`下一個：${prizes[idx+1].name}（${prizes[idx+1].count} 名）`:'（最後一個獎項）';
+    }
+  }
+  if(skipBtn)skipBtn.disabled=!prizes.length||idx>=prizes.length;
+
+  // All prizes list
+  const allProg=document.getElementById('all-prizes-progress');
+  if(allProg){
+    if(!prizes.length){allProg.innerHTML='<div class="eh">尚未設定獎項</div>';return;}
+    allProg.innerHTML=prizes.map((p,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid ${i===idx?'var(--gold-d)':i<idx?'var(--border)':'var(--border)'};border-radius:var(--r);margin-bottom:6px;opacity:${i<idx?.4:1}">
+        <div style="width:22px;height:22px;border-radius:50%;border:1px solid ${i===idx?'var(--gold-d)':'var(--border2)'};display:flex;align-items:center;justify-content:center;font-size:11px;color:${i===idx?'var(--gold)':'var(--text3)'};flex-shrink:0;font-family:'DM Mono',monospace">${i+1}</div>
+        <span style="flex:1;font-size:14px;color:${i===idx?'var(--gold-l)':i<idx?'var(--text3)':'var(--text)'}">${p.name}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:${i<idx?'var(--text3)':i===idx?'var(--gold)':'var(--text3)'}">${i<idx?'已完成':p.remaining+'/'+p.count}</span>
+        ${i===idx?'<span style="font-size:10px;color:var(--gold);border:1px solid var(--gold-d);border-radius:10px;padding:2px 7px;flex-shrink:0">進行中</span>':''}
+      </div>`).join('');
+  }
+}
+
+/* ── PHOTO UPLOAD ── */
+function triggerPhotoUpload(i){document.getElementById('photoInput_'+i).click();}
+async function uploadPhoto(i,e){
+  const file=e.target.files[0];if(!file)return;
+  if(!file.type.startsWith('image/')){toast('請選擇圖片檔案');return;}
+  const ref=storage.ref('prizes/prize_'+i+'_'+Date.now()+'.'+file.name.split('.').pop());
+  const task=ref.put(file);
+  toast('上傳中...');
+  task.on('state_changed',null,
+    err=>{toast('上傳失敗：'+err.message);},
+    async()=>{
+      const url=await task.snapshot.ref.getDownloadURL();
+      prizes[i].photoURL=url;saveP(prizes);toast('✅ 照片上傳成功');e.target.value='';
+    }
+  );
+}
+function deletePhoto(i){
+  if(!confirm('確定刪除此獎品照片？'))return;
+  if(prizes[i].photoURL){try{storage.refFromURL(prizes[i].photoURL).delete();}catch(err){}}
+  prizes[i].photoURL='';saveP(prizes);toast('已刪除照片');
 }
 
 /* ── TOAST ── */
